@@ -1,7 +1,7 @@
 (ns baldr.core-test
   (:require [clojure.test :refer :all]
             [baldr.core :refer :all])
-  (:import [java.io ByteArrayInputStream]))
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream]))
 
 
 (deftest read-record-test
@@ -45,3 +45,17 @@
            (seq (first record-seq))))
     (is (= (seq (byte-array (range 300)))
            (seq (last record-seq))))))
+
+
+(deftest stream-roundtrip
+  (let [ostream (ByteArrayOutputStream. 100)
+        write (baldr-writer ostream)]
+    (write (byte-array [1 2 3]))
+    (write (byte-array [1 2 3 4]))
+    (.close ostream)
+
+    (let [records (baldr-seq (ByteArrayInputStream. (.toByteArray ostream)))]
+      (is (= (seq (byte-array [1 2 3]))
+             (seq (first records))))
+      (is (= (seq (byte-array [1 2 3 4]))
+             (seq (last records)))))))

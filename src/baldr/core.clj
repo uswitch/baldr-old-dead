@@ -52,3 +52,20 @@
 (defn baldr-seq
   [istream]
   (take-while (comp not nil?) (repeatedly (partial read-record istream))))
+
+(defn baldr-record [^bytes payload]
+  (let [payload-length (alength payload)
+        record         (byte-array (+ record-length-buffer-size payload-length))
+        header         (bytes-from-long payload-length)]
+    (System/arraycopy header  0
+                      record  0
+                      record-length-buffer-size)
+    (System/arraycopy payload 0
+                      record  record-length-buffer-size
+                      payload-length)
+    record))
+
+(defn baldr-writer
+  [ostream]
+  (fn [^bytes payload]
+    (.write ostream (baldr-record payload))))
