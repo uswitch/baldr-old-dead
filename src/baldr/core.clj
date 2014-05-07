@@ -29,6 +29,17 @@
               (recur (+ total-bytes-read bytes-read)))
           total-bytes-read)))))
 
+
+;; +------------------------+
+;; |         Record         |
+;; +------------------------+  ....
+;; | header     | payload   |
+;; +------------+-----------+  ....
+;; |  8 bytes   |  n bytes  |
+;; +------------+-----------+  ....
+;;
+;; header contains the length of the payload
+
 (defn read-record [istream]
   (let [record-length-bytes (byte-array record-length-buffer-size)
         bytes-read          (full-read istream record-length-bytes)]
