@@ -1,6 +1,7 @@
 (ns baldr.core
   (:require [clojure.java.io :refer (file output-stream)])
-  (:import [java.nio ByteBuffer ByteOrder]))
+  (:import [java.nio ByteBuffer ByteOrder]
+           [java.io InputStream OutputStream]))
 
 (def record-length-buffer-size 8)
 (def chunk-length-bytes        1024)
@@ -16,7 +17,7 @@
       (.putLong val))
     bytes))
 
-(defn full-read [istream ^bytes bytes]
+(defn full-read [^InputStream istream ^bytes bytes]
   (let [total-record-length (alength bytes)
         chunk-bytes         (byte-array chunk-length-bytes)]
     (loop [total-bytes-read 0]
@@ -66,6 +67,6 @@
     record))
 
 (defn baldr-writer
-  [ostream]
+  [^OutputStream ostream]
   (fn [^bytes payload]
-    (.write ostream (baldr-record payload))))
+    (.write ostream ^bytes (baldr-record payload))))
