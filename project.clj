@@ -1,4 +1,4 @@
-(defproject baldr "0.1.0"
+(defproject baldr "0.1.1"
   :description "Light and pure record-oriented file format"
   :url "http://github.com/uswitch/baldr"
   :license {:name "Eclipse Public License"
