@@ -2,30 +2,6 @@
   (:require [clojure.java.io :refer (file output-stream)])
   (:import [java.nio ByteBuffer ByteOrder]))
 
-
-(comment
-  (time
-   (with-open [output (output-stream (file "/tmp/test.baldr"))]
-     (let [encoded (encode-to-stream baldr
-                                     output
-                                     [(repeat (* 1024 1024 10) (byte 0))])])))
-
-
-  (time
-   (with-open [output (output-stream (file "/tmp/test.raw.baldr"))]
-     (let [content (repeat (* 1024 1024 10) (byte 0))]
-       (.write output (byte-array content)))))
-
-  (time
-   (with-open [output (output-stream (file "/tmp/test.raw.baldr"))]
-     (let [content (repeat (* 1024 1024) (byte 0))
-           array (byte-array content)]
-       (doseq [i (range 10)] (.write output array))))))
-
-
-
-
-
 (def record-length-buffer-size 8)
 (def chunk-length-bytes        1024)
 
