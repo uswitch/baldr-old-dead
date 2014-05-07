@@ -2,7 +2,8 @@
 
 # baldr
 
-Named after the "god of light and purity" in Norse mythology. A light a pure file format for records of bytes.
+Named after the "god of light and purity" in Norse mythology. A light
+and pure file format for records of bytes.
 
 ## Usage
 
@@ -23,17 +24,12 @@ Write byte-arrays to an `OutputStream` using `baldr-writer`.
 Read seq of byte-arrays from an `InputStream` using `baldr-seq`.
 
 ```clojure
-(defn record [n]
-  (let [header (bytes-from-long n)
-        record (byte-array (range n))]
-    (byte-array (concat header record))))
-
 (let [ostream (ByteArrayOutputStream. 100)
-      write (baldr-writer ostream)]
+      write (baldr.core/baldr-writer ostream)]
   (write (byte-array [1 2 3]))
   (write (byte-array [1 2 3 4]))
   (.close ostream)
-  (baldr-seq (ByteArrayInputStream. (.toByteArray ostream))))
+  (baldr.core/baldr-seq (ByteArrayInputStream. (.toByteArray ostream))))
 ```
 
 ## License
