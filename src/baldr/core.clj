@@ -55,10 +55,16 @@
         record))))
 
 (defn baldr-seq
-  [istream]
+  "Consumes bytes from istream and returns a seq of byte-arrays
+  corresponding to the baldr records they correspond to. Does not handle
+  corrupted bytestreams."
+  [^InputStream istream]
   (take-while (comp not nil?) (repeatedly (partial read-record istream))))
 
-(defn baldr-record [^bytes payload]
+(defn baldr-record
+  "Returns a new byte-array containing the length of payload, followed
+  by payload."
+  [^bytes payload]
   (let [payload-length (alength payload)
         record         (byte-array (+ record-length-buffer-size payload-length))
         header         (bytes-from-long payload-length)]
@@ -71,6 +77,9 @@
     record))
 
 (defn baldr-writer
+  "Returns a function which takes byte-arrays and writes them to ostream
+  as baldr-records, containing the byte-array lengths and their
+  contents."
   [^OutputStream ostream]
   (fn [^bytes payload]
     (.write ostream ^bytes (baldr-record payload))))
