@@ -6,18 +6,21 @@
 (def record-length-buffer-size 8)
 (def chunk-length-bytes        1024)
 
-(defn long-from-bytes [bytes]
+(defn- long-from-bytes
+  [^bytes bytes]
   (.getLong (.order (ByteBuffer/wrap bytes)
                     ByteOrder/BIG_ENDIAN)))
 
-(defn bytes-from-long [val]
+(defn- bytes-from-long
+  [val]
   (let [bytes (byte-array 8)]
     (doto (ByteBuffer/wrap bytes)
       (.order ByteOrder/BIG_ENDIAN)
       (.putLong val))
     bytes))
 
-(defn full-read [^InputStream istream ^bytes bytes]
+(defn- full-read
+  [^InputStream istream ^bytes bytes]
   (let [total-record-length (alength bytes)
         chunk-bytes         (byte-array chunk-length-bytes)]
     (loop [total-bytes-read 0]
@@ -41,7 +44,8 @@
 ;;
 ;; header contains the length of the payload
 
-(defn read-record [istream]
+(defn- read-record
+  [istream]
   (let [record-length-bytes (byte-array record-length-buffer-size)
         bytes-read          (full-read istream record-length-bytes)]
     (when (> bytes-read 0)

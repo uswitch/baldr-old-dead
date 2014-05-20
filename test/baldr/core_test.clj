@@ -5,31 +5,31 @@
 
 
 (deftest read-record-test
-  (let [header    (bytes-from-long 3)
+  (let [header    (@#'baldr.core/bytes-from-long 3)
         record    (byte-array (range 3))
         raw-bytes (byte-array (concat header record))]
     (is (= (seq (byte-array (range 3)))
-           (seq (read-record (ByteArrayInputStream. raw-bytes)))))))
+           (seq (@#'baldr.core/read-record (ByteArrayInputStream. raw-bytes)))))))
 
 (deftest multi-chunk-record-test
   (let [n         1200
-        header    (bytes-from-long n)
+        header    (@#'baldr.core/bytes-from-long n)
         record    (byte-array (range n))
         raw-bytes (byte-array (concat header record))]
     (is (= (seq (byte-array (range n)))
-           (seq (read-record (ByteArrayInputStream. raw-bytes)))))))
+           (seq (@#'baldr.core/read-record (ByteArrayInputStream. raw-bytes)))))))
 
 (defn record [n]
-  (let [header (bytes-from-long n)
+  (let [header (@#'baldr.core/bytes-from-long n)
         record (byte-array (range n))]
     (byte-array (concat header record))))
 
 (deftest multi-record-test
   (let [records (byte-array (concat (record 100) (record 200)))
         bin     (ByteArrayInputStream. records)
-        record1 (read-record bin)
-        record2 (read-record bin)
-        record3 (read-record bin)]
+        record1 (@#'baldr.core/read-record bin)
+        record2 (@#'baldr.core/read-record bin)
+        record3 (@#'baldr.core/read-record bin)]
     (is (= (seq (byte-array (range 100)))
            (seq record1)))
     (is (= (seq (byte-array (range 200)))
